@@ -44,12 +44,7 @@ app.post('/', multipartMiddleware, function(req, res) {
       console.error('file write to temp' + newfile)
       fs.rename(req.files.data.path, newfile, ()=>{
         console.log("\nFile Renamed in temp !\n"); 
-        fs.unlink(currentfile, (err) => {
-          if (err) {
-            console.error('delete failed' + err)
-            return
-          }
-        })
+
         joinVideo(oldfile,newfile)
         res.send(`upload successful, file written to ${location}`)
       })

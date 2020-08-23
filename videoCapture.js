@@ -3,6 +3,7 @@
 
 const record = document.getElementById('record')
 const stop = document.getElementById('stop')
+const filename= "video" + Date.now();
 
 if (!navigator.mediaDevices){
   alert('getUserMedia support required to use this page')
@@ -63,7 +64,7 @@ navigator.mediaDevices.getUserMedia({
     console.log('chunks', chunks)
     const bigVideoBlob = new Blob(chunks, {'type' : 'video/webm; codecs=webm'})
     let fd = new FormData()
-    fd.append('fname', 'santu')
+    fd.append('fname', filename)
     fd.append('data', bigVideoBlob)
     $.ajax({
       type: 'POST',
