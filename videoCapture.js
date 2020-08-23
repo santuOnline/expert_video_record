@@ -8,7 +8,8 @@ if (!navigator.mediaDevices){
   alert('getUserMedia support required to use this page')
 }
 
-const chunks = []
+ let  chunks = []
+ let myVar 
 let onDataAvailable = (e) => {
   chunks.push(e.data)
 }
@@ -30,15 +31,26 @@ navigator.mediaDevices.getUserMedia({
 
   record.onclick = () => {
     recorder.start()
+
+     myVar = setInterval(myTimer, 10000);
+
+    function myTimer() {
+        recorder.stop();
+        chunks = [];
+        recorder.start();
+
+    }
+
     document.getElementById('status').innerHTML = 'recorder started'
     console.log(recorder.state)
     console.log('recorder started')
   }
 
   stop.onclick = ()=> {
+    clearInterval(myVar);
     recorder.stop()
     console.log(recorder.state)
-    document.getElementById('status').innerHTML = 'recorder started'
+    document.getElementById('status').innerHTML = 'recorder stopped'
     console.log('recorder stopped')
   }
 
@@ -46,16 +58,17 @@ navigator.mediaDevices.getUserMedia({
     console.log('onloadedmetadata', e)
   }
 
-  recorder.onstop = (e) => {
+  recorder.onstop = (e) => {   
     console.log('e', e)
     console.log('chunks', chunks)
-    const bigVideoBlob = new Blob(chunks, { 'type' : 'video/webm; codecs=webm' })
+    const bigVideoBlob = new Blob(chunks, {'type' : 'video/webm; codecs=webm'})
     let fd = new FormData()
-    fd.append('fname', 'test.webm')
+    fd.append('fname', 'santu')
     fd.append('data', bigVideoBlob)
     $.ajax({
       type: 'POST',
       url: '/',
+      //url: 'http://server.eiilm.co.in:8080/',
       data: fd,
       processData: false,
       contentType: false
