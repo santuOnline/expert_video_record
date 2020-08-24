@@ -18,6 +18,8 @@ let currentfile =' ';
 
 
 app.get('/', function (req, res) {
+console.log('redirecting');  
+console.log(os.tmpdir());
   res.redirect('/videoCapture.html')
 })
 
@@ -106,5 +108,6 @@ readerStream.on('data', function(chunk) {
 })
 
 app.listen(8080, function () {
-  console.log('Example app listening on port 8080!')
+console.log(os.tmpdir()); 
+ console.log('Example app listening on port 8080!')
 })
