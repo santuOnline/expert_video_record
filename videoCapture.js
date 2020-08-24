@@ -3,7 +3,16 @@
 
 const record = document.getElementById('record')
 const stop = document.getElementById('stop')
-const filename= "video" + Date.now();
+let filename= "video" + Date.now();
+const param = (new URLSearchParams(window.location.search)).get('name')
+if (param === ' '){
+  console.log(param)
+  filename= "video" + Date.now();
+}
+else {
+  filename= param + Date.now();
+}
+ console.log('filename: ' + filename)
 
 if (!navigator.mediaDevices){
   alert('getUserMedia support required to use this page')
@@ -69,7 +78,6 @@ navigator.mediaDevices.getUserMedia({
     $.ajax({
       type: 'POST',
       url: '/',
-      //url: 'http://server.eiilm.co.in:8080/',
       data: fd,
       processData: false,
       contentType: false

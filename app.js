@@ -19,6 +19,7 @@ let currentfile =' ';
 
 app.get('/', function (req, res) {
   res.redirect('/videoCapture.html')
+  console.log(os.tmpdir());
 })
 
 app.post('/', multipartMiddleware, function(req, res) {
