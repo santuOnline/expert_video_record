@@ -1,4 +1,4 @@
-"# expert_video_record" 
+"#video_record from browser to web server" 
 
 This is a nodejs project which can record video from webcam and continously upload to web server. This can be used as a plug and play solution for cases where recording of user video is required. 
 
@@ -14,8 +14,8 @@ So I have changed it to upload in intervals of 10 secs each. Every 10 sec the vi
 4. In case of windows machine place the path to ffmpeg.exe to 'PATH' variable on your windows machine.
 5. For linux just install it from your  respective software repo with "apt-get" or "yum". 
 6. Check if "ffmpeg" command gives any output on the command line terminal. If not, check the installation. It is necessary.
-7. Go to the project folder and deploy with  "node app.js" in command line terminal.
-8. Go to "server address:8080" on your browser.
+7. Go to the project folder and deploy with  "nodemon app.js" in command line terminal.
+8. Go to "server address:8080/videoCapture.html?name=filename" on your browser. The "filename" is the name of the video file saved to server, passed as a parm.
 9. press "start" to start the recording and "stop" to stop the recording
 
 
