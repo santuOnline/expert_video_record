@@ -1,5 +1,5 @@
 /* global require */
-
+var https = require('https');
 const multipart = require('connect-multiparty')
 const multipartMiddleware = multipart()
 const path = require('path')
@@ -9,23 +9,29 @@ let videoStitch = require('video-stitch');
  
 let videoConcat = videoStitch.concat;
 
-var express = require('express')
-var app = express()
-app.use(express.static('.'))
+var privateKey  = fs.readFileSync('key.key', 'utf8');
+var certificate = fs.readFileSync('cert.cert', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
+
+var express = require('express') ;
+var app = express();
+app.use(express.static('./public'))
+
 var i = 0 ;
 let oldfile = ' ';
 let currentfile =' ';
 
 
 app.get('/', function (req, res) {
-console.log('redirecting');  
-console.log(os.tmpdir());
-  res.redirect('/videoCapture.html')
-  console.log(os.tmpdir());
+//console.log('redirecting');  
+//console.log(os.tmpdir());
+res.redirect('/videoCapture.html')
+
 })
 
 app.post('/', multipartMiddleware, function(req, res) {
-  console.log('files', req.body.fname)
+ // console.log('files', req.body.fname)
   
   //let location = path.join(os.tmpdir(), 'upload' + i++ + '.webm')
   let location = path.join(os.tmpdir() ,req.body.fname + '.webm')
@@ -33,20 +39,20 @@ app.post('/', multipartMiddleware, function(req, res) {
   currentfile = path.join(os.tmpdir() ,req.body.fname + '_current.webm')
   fs.access(location, fs.constants.F_OK | fs.constants.W_OK, (err) => {
     if (err) {
-      console.error('file not present' + location)
+   //   console.error('file not present' + location)
       oldfile = location
       fs.rename(req.files.data.path, location, ()=>{
-        console.log("\nbase file written!\n"); 
+        console.log("base file written to " + location ); 
       })
-      console.log(`upload successful, file written to ${location}`)
+   //   console.log(`upload successful, file written to ${location}`)
       res.send(`upload successful, file written to ${location}`)
       return
     }
     else {
       
-      console.error('file write to temp' + newfile)
+   //   console.error('file write to temp' + newfile)
       fs.rename(req.files.data.path, newfile, ()=>{
-        console.log("\nFile Renamed in temp !\n"); 
+//     console.log("\nFile Renamed in temp !\n"); 
 
         joinVideo(oldfile,newfile)
         res.send(`upload successful, file written to ${location}`)
@@ -76,9 +82,9 @@ function joinVideo( oldfile,newfile){
   .output(currentfile ) //optional absolute file name for output file
   .concat()
   .then((outputFileName) => {
-    console.log('concat to ' + outputFileName + ' ' )
+//    console.log('concat to ' + outputFileName + ' ' )
     fs.rename(outputFileName, oldfile, ()=>{
-      console.log("\ncurrent copied to old !\n"); 
+//      console.log("\ncurrent copied to old !\n"); 
     })
     
     fs.unlink(newfile, (err) => {
@@ -108,7 +114,7 @@ readerStream.on('data', function(chunk) {
 });
 })
 
-app.listen(8080, function () {
-console.log(os.tmpdir()); 
- console.log('Example app listening on port 8080!')
+var httpsServer = https.createServer(credentials, app)
+httpsServer.listen(8080, function () {
+  console.log('Video recorder app listening on port 8080!')
 })
